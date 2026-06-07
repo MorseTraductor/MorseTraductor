@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="logopestaña.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MorseTraductor - Universidad de Barinas</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg: #f3f4f6; /* Un gris muy claro, como en la imagen */
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+            --univ-indigo: #3f51b5; /* Color índigo para detalles de la universidad */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative; /* Necesario para el posicionamiento absoluto del logo */
+        }
+
+        /* --- Estilos para el Logo FUERA de la caja --- */
+        .universal-logo-container {
+            position: absolute;
+            top: 20px;   /* Distancia desde arriba */
+            left: 20px;  /* Distancia desde la izquierda */
+            z-index: 10;  /* Asegura que esté por encima del fondo */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .universal-logo-container img {
+            max-width: 155px; /* Tamaño del logo crest */
+            height: auto;
+            /* Si usas una imagen local, asegúrate de que se llame logo_universidad.png */
+        }
+
+        /* Estilo para el texto debajo del logo (opcional, pero profesional) */
+        .univ-text {
+            font-size: 0.75rem;
+            color: var(--univ-indigo);
+            font-weight: bold;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- Estilos para la caja blanca (Traductor) --- */
+        .translator-container {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px; /* Bordes ligeramente más nítidos, como en la imagen */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            width: 90%;
+            max-width: 900px; /* Un poco más ancha */
+            position: relative;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 30px;
+            color: var(--text);
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center; /* Centrado */
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        select {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background-color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            min-width: 160px;
+            appearance: none; /* Quita la flecha por defecto */
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%231e293b%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095.1c3.6-3.6%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right%2015px%20top%2050%;
+            background-size: 12px%20auto;
+        }
+
+        .swap-btn {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            transition: all 0.2s;
+            color: var(--text);
+        }
+
+        .swap-btn:hover {
+            background-color: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .panels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 220px;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            resize: none;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+            color: var(--text);
+        }
+
+        textarea:focus {
+            border-color: var(--primary);
+        }
+
+        textarea::placeholder {
+            color: #94a3b8;
+        }
+
+        .translate-btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .translate-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .translate-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* --- Responsividad --- */
+        @media (max-width: 768px) {
+            .universal-logo-container {
+                position: relative; /* Vuelve al flujo normal */
+                top: 0;
+                left: 0;
+                margin: 20px auto; /* Centrado arriba */
+                flex-direction: row; /* Horizontal en móvil */
+                justify-content: center;
+            }
+            .universal-logo-container img {
+                max-width: 60px;
+            }
+            .panels {
+                grid-template-columns: 1fr;
+            }
+            textarea {
+                height: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Caja oculta donde Google cargará su sistema -->
+<div id="google_translate_element" style="display:none;"></div>
+
+<!-- Script oficial de Google Translate -->
+<script type="text/javascript">
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+        pageLanguage: 'es', 
+        includedLanguages: 'en,es', // Solo nos interesan Español e Inglés
+        autoDisplay: false
+    }, 'google_translate_element');
+}
+</script>
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <div class="universal-logo-container">
+        <img src="unefa.png" alt=>
+    </div>
+
+    <div class="translator-container">
+        <h1>MorseTraductor</h1>
+        
+        <div class="controls">
+            <select id="lang-from">
+                <option value="es">Español</option>
+                <option value="en">Inglés</option>
+                <option value="morse">Código Morse</option>
+            </select>
+
+            <button class="swap-btn" id="swap-languages" title="Intercambiar idiomas">⇄</button>
+
+            <select id="lang-to">
+                <option value="en">Inglés</option>
+                <option value="es">Español</option>
+                <option value="morse">Código Morse</option>
+            </select>
+        </div>
+
+        <div class="panels">
+            <div class="panel">
+                <textarea id="text-input" placeholder="Introduce el texto a traducir..."></textarea>
+            </div>
+            
+            <div class="panel">
+                <textarea id="text-output" placeholder="La traducción aparecerá aquí..." readonly></textarea>
+            </div>
+        </div>
+
+        <div class="translate-btn-container">
+            <button class="translate-btn" id="translate-trigger">Traducir</button>
+        </div>
+    </div>
+
+    <script>
+        // Diccionario para Código Morse
+        const morseAlphabet = {
+            'a': '.-', 'b': '-...', 'c': '-.-.', 'd': '-..', 'e': '.', 'f': '..-.', 'g': '--.', 'h': '....',
+            'i': '..', 'j': '.---', 'k': '-.-', 'l': '.-..', 'm': '--', 'n': '-.', 'o': '---', 'p': '.--.',
+            'q': '--.-', 'r': '.-.', 's': '...', 't': '-', 'u': '..-', 'v': '...-', 'w': '.--', 'x': '-..-',
+            'y': '-.--', 'z': '--..', '1': '.----', '2': '..---', '3': '...--', '4': '....-', '5': '.....',
+            '6': '-....', '7': '--...', '8': '---..', '9': '----.', '0': '-----', ' ': '/'
+        };
+
+        const textAlphabet = {};
+        for (let key in morseAlphabet) { textAlphabet[morseAlphabet[key]] = key; }
+
+        const langFrom = document.getElementById('lang-from');
+        const langTo = document.getElementById('lang-to');
+        const textInput = document.getElementById('text-input');
+        const textOutput = document.getElementById('text-output');
+        const translateBtn = document.getElementById('translate-trigger');
+        const swapBtn = document.getElementById('swap-languages');
+
+        function textToMorse(text) {
+            return text.toLowerCase().split('').map(char => morseAlphabet[char] || char).join(' ');
+        }
+
+        function morseToText(morse) {
+            return morse.trim().split(' ').map(code => textAlphabet[code] || code).join('');
+        }
+// Añadimos 'async' antes de 'function' para que permita el uso de 'await'
+async function translateTextAPI(text, from, to) {
+    try {
+        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`);
+        const data = await res.json();
+        return data.responseData ? data.responseData.translatedText : "Error en la traducción.";
+    } catch (error) { 
+        return "Error de conexión."; 
+    }
+}
+// ¡Puedes agregar aquí todas las palabras que quieras asegurar que siempre se traduzcan!
+const localDictionary = {
+    // Español a Inglés
+    'hola': 'hello',
+    'universidad': 'university',
+    'barinas': 'Barinas',
+    'estudiante': 'student',
+    'computacion': 'computing',
+    'ingenieria': 'engineering',
+    'codigo': 'code',
+    
+    // Inglés a Español
+    'hello': 'hola',
+    'university': 'universidad',
+    'student': 'estudiante',
+    'engineering': 'ingeniería'
+};
+
+// 2. Función de traducción mejorada
+async function translateTextAPI(text, from, to) {
+    // Google Translate Web Element traduce la página completa basado en el idioma del navegador.
+    // Para usar su motor de forma exacta con tus dos cajas de texto, simulamos la consulta reflectora:
+    
+    if (!text) return "";
+
+    try {
+        // Formamos la URL oficial de consulta de Google Translate para el iframe nativo
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${from}&tl=${to}&dt=t&q=${encodeURIComponent(text)}`;
+        
+        const res = await fetch(url);
+        const data = await res.json();
+        
+        // El motor de Google devuelve un array estructurado. Así extraemos el texto limpio:
+        if (data && data[0]) {
+            let translation = "";
+            for (let i = 0; i < data[0].length; i++) {
+                if (data[0][i][0]) {
+                    translation += data[0][i][0];
+                }
+            }
+            return translation;
+        }
+        return "No se pudo obtener la traducción.";
+
+    } catch (error) {
+        console.error(error);
+        return "Error al conectar con Google Translate.";
+    }
+}
+
+        async function handleTranslation() {
+            const text = textInput.value.trim();
+            const from = langFrom.value;
+            const to = langTo.value;
+            if (!text) { textOutput.value = ""; return; }
+            if (from === to) { textOutput.value = text; return; }
+
+            if (to === 'morse') { textOutput.value = textToMorse(text); }
+            else if (from === 'morse') { textOutput.value = morseToText(text); }
+            else { textOutput.value = await translateTextAPI(text, from, to); }
+        }
+
+        swapBtn.addEventListener('click', () => {
+            const tempLang = langFrom.value; langFrom.value = langTo.value; langTo.value = tempLang;
+            const tempText = textInput.value; textInput.value = textOutput.value; textOutput.value = tempText;
+        });
+
+        translateBtn.addEventListener('click', handleTranslation);
+    </script>
+</body>
+</html>
